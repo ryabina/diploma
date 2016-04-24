@@ -105,39 +105,39 @@ def nonMaximumSuppression(I,I_temp, dims, pos, c, maxima):
 
 
 def computeDescriptor(I_du, I_dv, u,v, it):
-
-    it.d1[0] = (I_du[u-3][v-1])
-    it.d1[1] = (I_dv[u-3][v-1])
-    it.d1[2] = (I_du[u-3][v+1])
-    it.d1[3] = (I_dv[u-3][v+1])
-    it.d1[4] = (I_du[u-1][v-1])
-    it.d1[5] = (I_dv[u-1][v-1])
-    it.d1[6] = (I_du[u-1][v+1])
-    it.d1[7] = (I_dv[u-1][v+1])
-    it.d1[8] = (I_du[u+1][v-1])
-    it.d1[9] = (I_dv[u+1][v-1])
-    it.d1[10]= (I_du[u+1][v+1])
-    it.d1[11]= (I_dv[u+1][v+1])
-    it.d1[12]= (I_du[u+3][v-1])
-    it.d1[13]= (I_dv[u+3][v-1])
-    it.d1[14]= (I_du[u+3][v+1])
-    it.d1[15]= (I_dv[u+3][v+1])
-    it.d1[16]= (I_du[u-5][v-3])
-    it.d1[17]= (I_dv[u-5][v-3])
-    it.d1[18]= (I_du[u-5][v+3])
-    it.d1[19]= (I_dv[u-5][v+3])
-    it.d1[20]= (I_du[u+5][v-3])
-    it.d1[21]= (I_dv[u+5][v-3])
-    it.d1[22]= (I_du[u+5][v+3])
-    it.d1[23]= (I_dv[u+5][v+3])
-    it.d1[24]= (I_du[u-1][v-5])
-    it.d1[25]= (I_dv[u-1][v-5])
-    it.d1[26]= (I_du[u-1][v+5])
-    it.d1[27]= (I_dv[u-1][v+5])
-    it.d1[28]= (I_du[u+1][v-5])
-    it.d1[29]= (I_dv[u+1][v-5])
-    it.d1[30]= (I_du[u+1][v+5])
-    it.d1[31]= (I_dv[u+1][v+5])
+    d = np.zeros(32)
+    d[0] = I_du[u-3,v-1]
+    d[1] = I_dv[u-3,v-1]
+    d[2] = I_du[u-3,v+1]
+    d[3] = I_dv[u-3,v+1]
+    d[4] = I_du[u-1,v-1]
+    d[5] = I_dv[u-1,v-1]
+    d[6] = I_du[u-1,v+1]
+    d[7] = I_dv[u-1,v+1]
+    d[8] = I_du[u+1,v-1]
+    d[9] = I_dv[u+1,v-1]
+    d[10]= I_du[u+1,v+1]
+    d[11]= I_dv[u+1,v+1]
+    d[12]= I_du[u+3,v-1]
+    d[13]= I_dv[u+3,v-1]
+    d[14]= I_du[u+3,v+1]
+    d[15]= I_dv[u+3,v+1]
+    d[16]= I_du[u-5,v-3]
+    d[17]= I_dv[u-5,v-3]
+    d[18]= I_du[u-5,v+3]
+    d[19]= I_dv[u-5,v+3]
+    d[20]= I_du[u+5,v-3]
+    d[21]= I_dv[u+5,v-3]
+    d[22]= I_du[u+5,v+3]
+    d[23]= I_dv[u+5,v+3]
+    d[24]= I_du[u-1,v-5]
+    d[25]= I_dv[u-1,v-5]
+    d[26]= I_du[u-1,v+5]
+    d[27]= I_dv[u-1,v+5]
+    d[28]= I_du[u+1,v-5]
+    d[29]= I_dv[u+1,v-5]
+    d[30]= I_du[u+1,v+5]
+    d[31]= I_dv[u+1,v+5]
 
 
 def computeDescriptors(I, dims, maxima):
@@ -293,16 +293,18 @@ def match_two_pictures(maximaLeftp,maximaRightp):
     return p
     M = 150
 
-def match_two_pictures_reorg(data_left, data_right, maxima_left):
+def match_two_pictures_reorg(data_left, data_right, maximaLeft, files = False):
     p = []
-    files = 'shelve_5cm.txt'
-    f = open(files, 'w')
+    if files:
+        file = 'shelve_5cm.txt'
+        f = open(file, 'w')
+        j = 0
 #random cycle
     mlen = len(maximaLeft)
     step = 100
     distance_lp_rp = np.zeros(step)
 
-    j = 0
+
     start = time.clock()
     for i in range(0, mlen, int(mlen/step)):
         uLp,vLp = [maximaLeft[i].u,maximaLeft[i].v]
@@ -326,19 +328,15 @@ def match_two_pictures_reorg(data_left, data_right, maxima_left):
             p.append(p_match( uLp,vLp,uRp,vRp, cLp,cRp ))
             data_left[uLp, vLp]['c'] = 0
             data_right[uRp, vRp]['c']= 0
-
-            f.write(str(uLp)+ ','+ str(vLp) + ',' +str(uRp)+ ',' +str(vRp) +'\n')
-
-
-            j+=1
+            if files:
+                f.write(str(uLp)+ ','+ str(vLp) + ',' +str(uRp)+ ',' +str(vRp) +'\n')
+                j+=1
 
 
         l_r = int(np.max(distance_lp_rp))+4
 
     end = time.clock()
     print 'lp to rp', l_r
-
-
 
     print 'time for 150x150 window',end-start
     print 'len p= ', len(p)
@@ -363,21 +361,24 @@ def match_two_pictures_reorg(data_left, data_right, maxima_left):
             cLp = data_left[uLp,vLp]['c']
             cRp = data_right[uRp,vRp]['c']
             p.append(p_match( uLp,vLp,uRp,vRp, cLp,cRp))
-            f.write(str(uLp)+ ','+ str(vLp) + ',' +str(uRp)+ ',' +str(vRp) +'\n')
+            if files:
+                f.write(str(uLp)+ ','+ str(vLp) + ',' +str(uRp)+ ',' +str(vRp) +'\n')
 
             # f = open(files, 'a+b')
             # pickle.dump(p[j], f)
             # f.close()
-            j+=1
+                j+=1
     end = time.clock()
-    f.close()
+    if files:
+        f.close()
     print 'time for the rest points', end-start
     return p
 
 
-def match_four_pictures_reorg(data_left, data_right,data_left_cur,data_right_cur, maximaLeft, first_imgs = True):
+def match_four_pictures_reorg(data_left, data_right,data_left_cur,data_right_cur, maximaLeft, first_imgs = True, files = False):
     p = []
-    files = 'matchingImages_reorg_1.dat'
+    if files:
+        file = 'matchingImages_reorg_1.dat'
     if first_imgs:
     #random cycle
         mlen = len(maximaLeft)
@@ -426,9 +427,10 @@ def match_four_pictures_reorg(data_left, data_right,data_left_cur,data_right_cur
                 data_right[uRp, vRp]['c']= 0
                 data_left_cur[uLc, vLc]['c']=0
                 data_right_cur[uRc,vRc]['c']=0
-                f = open(files, 'a+b')
-                pickle.dump(p[j], f)
-                f.close()
+                if files:
+                 f = open(file, 'a+b')
+                 pickle.dump(p[j], f)
+                 f.close()
 
                 j+=1
 
@@ -557,270 +559,269 @@ def reorganize_data(maxima, img):
 
 
 
+def tryAll():
+    stringLeft= '/home/leyla/photo/IMG_8846.jpg'#'/home/leyla/pyProjects/вапвап/libviso/img/000001_left.jpg'
+    stringRight = '/home/leyla/photo/IMG_8851.jpg'   #'/home/leyla/pyProjects/вапвап/libviso/img/000001_right.jpg'
+    # stringRight = '/home/leyla/pyProjects/вапвап/libviso/img/000002_right.jpg'
+    # stringLeft= '/home/leyla/pyProjects/вапвап/libviso/img/000002_left.jpg'
+    stringRightCur = '/home/leyla/pyProjects/вапвап/libviso/img/000002_right.jpg'
+    stringLeftCur= '/home/leyla/pyProjects/вапвап/libviso/img/000002_left.jpg'
 
-#if __name__ == '__main__':
-#    global maxima, blob_img, corn_img
+    maximaRight =[]
+    maximaLeft =[]
 
-stringLeft= '/home/leyla/photo/IMG_8846.jpg'#'/home/leyla/pyProjects/вапвап/libviso/img/000001_left.jpg'
-stringRight = '/home/leyla/photo/IMG_8851.jpg'   #'/home/leyla/pyProjects/вапвап/libviso/img/000001_right.jpg'
-# stringRight = '/home/leyla/pyProjects/вапвап/libviso/img/000002_right.jpg'
-# stringLeft= '/home/leyla/pyProjects/вапвап/libviso/img/000002_left.jpg'
-stringRightCur = '/home/leyla/pyProjects/вапвап/libviso/img/000002_right.jpg'
-stringLeftCur= '/home/leyla/pyProjects/вапвап/libviso/img/000002_left.jpg'
+    maximaRightCur =[]
+    maximaRightCur =[]
+    maximaLeftCur =[]
 
-maximaRight =[]
-maximaLeft =[]
+    blob_imgRight=[]
+    corn_imgRight=[]
+    blob_imgLeft=[]
+    corn_imgLeft=[]
 
-maximaRightCur =[]
-maximaRightCur =[]
-maximaLeftCur =[]
+    blob_imgRightCur=[]
+    corn_imgRightCur=[]
+    blob_imgLeftCur=[]
+    corn_imgLeftCur=[]
 
-blob_imgRight=[]
-corn_imgRight=[]
-blob_imgLeft=[]
-corn_imgLeft=[]
+    imgRight = cv2.imread(stringRight, 0)
+    imgLeft = cv2.imread(stringLeft, 0)
+    # imgRightCur = cv2.imread(stringRightCur, 0)
+    # imgLeftCur = cv2.imread(stringLeftCur, 0)
+    # print imgRight.shape
+    # imgLeft = np.roll(imgRight,100, axis=1)
+    # imgLeft = np.delete(imgLeft,np.s_[:100:],1)
 
-blob_imgRightCur=[]
-corn_imgRightCur=[]
-blob_imgLeftCur=[]
-corn_imgLeftCur=[]
+    start = time.time()
+    blob_imgRight, corn_imgRight =findFeatures(imgRight, maximaRight, blob_imgRight, corn_imgRight)  #right image
+    blob_imgLeft, corn_imgLeft =findFeatures(imgLeft, maximaLeft, blob_imgLeft, corn_imgLeft)  #left image
 
-imgRight = cv2.imread(stringRight, 0)
-imgLeft = cv2.imread(stringLeft, 0)
-# imgRightCur = cv2.imread(stringRightCur, 0)
-# imgLeftCur = cv2.imread(stringLeftCur, 0)
-# print imgRight.shape
-# imgLeft = np.roll(imgRight,100, axis=1)
-# imgLeft = np.delete(imgLeft,np.s_[:100:],1)
+    # blob_imgRightCur, corn_imgRightCur =findFeatures(imgRightCur, maximaRightCur, blob_imgRightCur, corn_imgRightCur)  #right image
+    # blob_imgLeftCur, corn_imgLeftCur =findFeatures(imgLeftCur, maximaLeftCur, blob_imgLeftCur, corn_imgLeftCur)  #left image
+    #
+    end = time.time()
+    print end - start
 
-start = time.time()
-blob_imgRight, corn_imgRight =findFeatures(imgRight, maximaRight, blob_imgRight, corn_imgRight)  #right image
-blob_imgLeft, corn_imgLeft =findFeatures(imgLeft, maximaLeft, blob_imgLeft, corn_imgLeft)  #left image
+    keypointsRight =[]
+    keypointsLeft =[]
 
-# blob_imgRightCur, corn_imgRightCur =findFeatures(imgRightCur, maximaRightCur, blob_imgRightCur, corn_imgRightCur)  #right image
-# blob_imgLeftCur, corn_imgLeftCur =findFeatures(imgLeftCur, maximaLeftCur, blob_imgLeftCur, corn_imgLeftCur)  #left image
-#
-end = time.time()
-print end - start
+    # keypointsRightCur =[]
+    # keypointsLeftCur =[]
 
-keypointsRight =[]
-keypointsLeft =[]
+    for i in range (0,len(maximaRight)):
+        keypointsRight.append(cv2.KeyPoint(y= maximaRight[i].u, x = maximaRight[i].v,_size= 1, _angle = -1, _response=0, _octave=0, _class_id = -1))
 
-# keypointsRightCur =[]
-# keypointsLeftCur =[]
+    for i in range (0,len(maximaLeft)):
+         # if maxima1[i].c == 0:
+         keypointsLeft.append(cv2.KeyPoint(y = maximaLeft[i].u,x = maximaLeft[i].v,  _size= 1, _angle = -1, _response=0, _octave=0, _class_id = -1))
 
-for i in range (0,len(maximaRight)):
-    keypointsRight.append(cv2.KeyPoint(y= maximaRight[i].u, x = maximaRight[i].v,_size= 1, _angle = -1, _response=0, _octave=0, _class_id = -1))
-
-for i in range (0,len(maximaLeft)):
-     # if maxima1[i].c == 0:
-     keypointsLeft.append(cv2.KeyPoint(y = maximaLeft[i].u,x = maximaLeft[i].v,  _size= 1, _angle = -1, _response=0, _octave=0, _class_id = -1))
-
-# for i in range (0,len(maximaRightCur)):
-#     keypointsRightCur.append(cv2.KeyPoint(y= maximaRightCur[i].u, x = maximaRightCur[i].v,_size= 1, _angle = -1, _response=0, _octave=0, _class_id = -1))
-#
-# for i in range (0,len(maximaLeftCur)):
-#      # if maxima1[i].c == 0:
-#      keypointsLeftCur.append(cv2.KeyPoint(y = maximaLeftCur[i].u,x = maximaLeftCur[i].v,  _size= 1, _angle = -1, _response=0, _octave=0, _class_id = -1))
+    # for i in range (0,len(maximaRightCur)):
+    #     keypointsRightCur.append(cv2.KeyPoint(y= maximaRightCur[i].u, x = maximaRightCur[i].v,_size= 1, _angle = -1, _response=0, _octave=0, _class_id = -1))
+    #
+    # for i in range (0,len(maximaLeftCur)):
+    #      # if maxima1[i].c == 0:
+    #      keypointsLeftCur.append(cv2.KeyPoint(y = maximaLeftCur[i].u,x = maximaLeftCur[i].v,  _size= 1, _angle = -1, _response=0, _octave=0, _class_id = -1))
 
 
-im_with_keypointsRight= cv2.drawKeypoints(imgRight, keypointsRight, np.array([]), (0,0,255),
-                                        cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    im_with_keypointsRight= cv2.drawKeypoints(imgRight, keypointsRight, np.array([]), (0,0,255),
+                                            cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
-im_with_keypointsLeft = cv2.drawKeypoints(imgLeft, keypointsLeft, np.array([]), (0,0,255),
-                                        cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-
-
-# im_with_keypointsRightCur= cv2.drawKeypoints(imgRightCur, keypointsRightCur, np.array([]), (0,0,255),
-#                                         cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-#
-# im_with_keypointsLeftCur = cv2.drawKeypoints(imgLeftCur, keypointsLeftCur, np.array([]), (0,0,255),
-#                                         cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    im_with_keypointsLeft = cv2.drawKeypoints(imgLeft, keypointsLeft, np.array([]), (0,0,255),
+                                            cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
 
-#p = match_two_pictures(maximaLeft, maximaRight) #l r
-
-#p = match_four_pictures(maximaLeft, maximaRight, maximaLeftCur, maximaRightCur)
-s = time.clock()
-dataLeft = reorganize_data(maximaLeft, imgLeft)
-dataRight = reorganize_data(maximaRight,imgRight)
-# dataLeftCur= reorganize_data(maximaLeftCur,imgLeftCur)
-# dataRightCur = reorganize_data(maximaRightCur,imgRightCur)
-
-e = time.clock()
-print e - s
-s = time.clock()
-
-p = match_two_pictures_reorg(dataLeft, dataRight, maximaRightCur)
-#p = match_four_pictures_reorg(dataLeft,dataRight,dataLeftCur,dataRightCur,maximaLeft)
-# cv2.drawMatchesKnn expects list of lists as matches.
-e = time.clock()
-print e - s
-print len(p)
-# # p = []
-# #`
-# # files = 'matchingMovedImages.dat'
-# # f = open(files, 'rb')
-# # print len(p)
-# # #
-# # i = 0
-# # while True:
-# #     try:
-# #         p.append( pickle.load(f))
-# #     except (EOFError):
-# #         break
-# # f.close()
-# # print len(descr)
-keypoints_descr_Right=[]
-keypoints_descr_Left=[]
-
-keypoints_descr_RightCur=[]
-keypoints_descr_LeftCur=[]
+    # im_with_keypointsRightCur= cv2.drawKeypoints(imgRightCur, keypointsRightCur, np.array([]), (0,0,255),
+    #                                         cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    #
+    # im_with_keypointsLeftCur = cv2.drawKeypoints(imgLeftCur, keypointsLeftCur, np.array([]), (0,0,255),
+    #                                         cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
 
-for i in range (0, len(p)):
- #    u1p,v1p,u2p,v2p,u1c,v1c,u2c,v2c = p[i]
-     keypoints_descr_Right.append(cv2.KeyPoint(y = p[i].uRp, x = p[i].vRp,_size= 1, _angle = -1, _response=0, _octave=0, _class_id = -1))
-     keypoints_descr_Left.append(cv2.KeyPoint( y= p[i].uLp, x = p[i].vLp,_size= 1, _angle = -1, _response=0, _octave=0, _class_id = -1))
-     # keypoints_descr_RightCur.append(cv2.KeyPoint(y = p[i].uRc, x = p[i].vRc,_size= 1, _angle = -1, _response=0, _octave=0, _class_id = -1))
-     # keypoints_descr_LeftCur.append(cv2.KeyPoint( y= p[i].uLc, x = p[i].vLc,_size= 1, _angle = -1, _response=0, _octave=0, _class_id = -1))
-     #
+    #p = match_two_pictures(maximaLeft, maximaRight) #l r
 
-kpts_descr_Right = cv2.drawKeypoints(imgRight, keypoints_descr_Right, np.array([]), (255,0,0),
-                                         cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-kpts_descr_Left = cv2.drawKeypoints(imgLeft, keypoints_descr_Left, np.array([]), (0,255,0),
-                                          cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    #p = match_four_pictures(maximaLeft, maximaRight, maximaLeftCur, maximaRightCur)
+    s = time.clock()
+    dataLeft = reorganize_data(maximaLeft, imgLeft)
+    dataRight = reorganize_data(maximaRight,imgRight)
+    # dataLeftCur= reorganize_data(maximaLeftCur,imgLeftCur)
+    # dataRightCur = reorganize_data(maximaRightCur,imgRightCur)
 
-# kpts_descr_RightCur = cv2.drawKeypoints(imgRightCur, keypoints_descr_RightCur, np.array([]), (0,0,255),
-#                                          cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-# kpts_descr_LeftCur = cv2.drawKeypoints(imgLeftCur, keypoints_descr_LeftCur, np.array([]), (0,255,0),
-#                                            cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    e = time.clock()
+    print e - s
+    s = time.clock()
 
+    p = match_two_pictures_reorg(dataLeft, dataRight, maximaLeft)
+    #p = match_four_pictures_reorg(dataLeft,dataRight,dataLeftCur,dataRightCur,maximaLeft)
+    # cv2.drawMatchesKnn expects list of lists as matches.
+    e = time.clock()
+    print e - s
+    print len(p)
+    # # p = []
+    # #`
+    # # files = 'matchingMovedImages.dat'
+    # # f = open(files, 'rb')
+    # # print len(p)
+    # # #
+    # # i = 0
+    # # while True:
+    # #     try:
+    # #         p.append( pickle.load(f))
+    # #     except (EOFError):
+    # #         break
+    # # f.close()
+    # # print len(descr)
+    keypoints_descr_Right=[]
+    keypoints_descr_Left=[]
 
-# cv2.imshow('features matched in Right', kpts_descr_Right)
-# cv2.imshow('features matched in Left', kpts_descr_Left)
-
-
-#
-# cv2.imshow('features matched in RightC', kpts_descr_RightCur)
-# cv2.imshow('features matched in LeftC', kpts_descr_LeftCur)
-
-# cv2.imshow('kptsL', im_with_keypointsLeft)
-# cv2.imshow('kptsR', im_with_keypointsRight)
-# cv2.imshow('kptsLc', im_with_keypointsLeftCur)
-# cv2.imshow('kptsRc', im_with_keypointsRightCur)
-# #
-both0 = kpts_descr_Left.copy() #l r
-# both1 = np.hstack((kpts_descr_LeftCur,kpts_descr_RightCur))
-#
-# both2 = np.vstack((kpts_descr_Left,kpts_descr_LeftCur))
-# both3 = np.vstack((kpts_descr_Right,kpts_descr_RightCur))
-
-a = np.zeros(len(p))
-# files = 'tan.dat'
-# #
-#f = open(files, 'a+b')
-# print both0.shape
-for i in range (0, len(p),5):
-    # cv2.line(both2,( int(p[i].vLp),int(p[i].uLp)),(int(p[i].vLc),int(p[i].uLc+196 )),(255,0,0),1)
-    # cv2.line(both3,( int(p[i].vRp),int(p[i].uRp)),(int(p[i].vRc),int(p[i].uRc+196 )),(255,0,0),1)
-
-    #cv2.line(both0,( int(p[i].vLp),int(p[i].uLp)),(int(p[i].vRp+imgLeft.shape[1]),int(p[i].uRp )),(255,0,0),1)
-    cv2.line(both0,( int(p[i].vLp),int(p[i].uLp)),(int(p[i].vRp),int(p[i].uRp )),(255,0,0),1)
-    if p[i].vLp-p[i].vRp != 0:
-      a[i] = float(float((p[i].uLp - p[i].uRp)) / float((p[i].vLp-p[i].vRp)))
-    else:
-      a[i] = np.nan;
-
-    # cv2.line(both1,( int(p[i].vLc),int(p[i].uLc)),(int(p[i].vRc+672),int(p[i].uRc )),(255,0,0),1)
+    keypoints_descr_RightCur=[]
+    keypoints_descr_LeftCur=[]
 
 
-#     a[i] = (p[i].uLp - p[i].uRp) / (p[i].vLp-p[i].vRp)
-#     pickle.dump(a[i], f)
-# f.close()
-#  for i in range (0, len(p)):
-#      if abs(p[i].vLp-p[i].vRp) >100:
-#          pass
-#      # cv2.line(both0,( p[i].vLp,p[i].uLp),(p[i].vRp,p[i].uRp+192 ),(255,0,0),1)
-#      a[i] = float(float((p[i].uLp - p[i].uRp+196)) / float((p[i].vLp-p[i].vRp)))
-#      # pickle.dump(a[i], f)
-# f.close()
-# f = open(files, 'rb')
-# i = 0
-# while True:
-#      try:
-#          a.append( pickle.load(f))
-#      except (EOFError):
-#          break
-a = np.array(a)
-a[a==-np.inf] = 50
-a[np.isnan(a)] = 50
-a[a==np.inf] = 50
-# f.close()
-print a
-minimum = np.amin(a)
-maximum = np.amax(a)
-print 'min =', minimum, "max = ", maximum
-plt.hist(a,bins = 200)
-plt.title('plot_shelve_5cm')
-plt.xlabel("value")
-plt.ylabel('frequency')
-fig = plt.gcf()
-#
-plot_url = py.plot_mpl(fig, filename ='plot_shelve_5cm')
-#
-#
+    for i in range (0, len(p)):
+     #    u1p,v1p,u2p,v2p,u1c,v1c,u2c,v2c = p[i]
+         keypoints_descr_Right.append(cv2.KeyPoint(y = p[i].uRp, x = p[i].vRp,_size= 1, _angle = -1, _response=0, _octave=0, _class_id = -1))
+         keypoints_descr_Left.append(cv2.KeyPoint( y= p[i].uLp, x = p[i].vLp,_size= 1, _angle = -1, _response=0, _octave=0, _class_id = -1))
+         # keypoints_descr_RightCur.append(cv2.KeyPoint(y = p[i].uRc, x = p[i].vRc,_size= 1, _angle = -1, _response=0, _octave=0, _class_id = -1))
+         # keypoints_descr_LeftCur.append(cv2.KeyPoint( y= p[i].uLc, x = p[i].vLc,_size= 1, _angle = -1, _response=0, _octave=0, _class_id = -1))
+         #
 
-# print len(a)
-#py.sign_in('username', 'api_key')
-# #
-# # print a
-# #     if p[i].c1 == 1:
-# #         cv2.line(both1,(p[i].v2p, p[i].u2p),(p[i].v1p, p[i].u1p+196),(0,255,0),1)
-# #     if p[i].c1 == 2:
-# #         cv2.line(both2,(p[i].v2p, p[i].u2p),(p[i].v1p, p[i].u1p+196),(0,100,100),1)
-# #     if p[i].c1 == 3:
-# #         cv2.line(both3,(p[i].v2p, p[i].u2p),(p[i].v1p, p[i].u1p+196),(255,200,0),1)
+    kpts_descr_Right = cv2.drawKeypoints(imgRight, keypoints_descr_Right, np.array([]), (255,0,0),
+                                             cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    kpts_descr_Left = cv2.drawKeypoints(imgLeft, keypoints_descr_Left, np.array([]), (0,255,0),
+                                              cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
+    # kpts_descr_RightCur = cv2.drawKeypoints(imgRightCur, keypoints_descr_RightCur, np.array([]), (0,0,255),
+    #                                          cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    # kpts_descr_LeftCur = cv2.drawKeypoints(imgLeftCur, keypoints_descr_LeftCur, np.array([]), (0,255,0),
+    #                                            cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
 
-plt.imshow(kpts_descr_Left, cmap = 'gray', interpolation = 'bicubic')
+    # cv2.imshow('features matched in Right', kpts_descr_Right)
+    # cv2.imshow('features matched in Left', kpts_descr_Left)
 
-plt.xticks([]), plt.yticks([])  # to hide tick values on X and Y axis
-plt.show()
 
-plt.imshow(kpts_descr_Right,cmap = 'gray', interpolation = 'bicubic')
-plt.xticks([]), plt.yticks([])  # to hide tick values on X and Y axis
-plt.show()
-# cv2.imshow("test1",both1)
-# cv2.imshow("test2",both2)
-# cv2.imshow("test3",both3)
+    #
+    # cv2.imshow('features matched in RightC', kpts_descr_RightCur)
+    # cv2.imshow('features matched in LeftC', kpts_descr_LeftCur)
 
-cv2.namedWindow('test', cv2.WINDOW_NORMAL)
-cv2.imshow('test',both0)
-k  = cv2.waitKey(0) & 0xFF
-if k == 27:         # wait for ESC key to exit
+    # cv2.imshow('kptsL', im_with_keypointsLeft)
+    # cv2.imshow('kptsR', im_with_keypointsRight)
+    # cv2.imshow('kptsLc', im_with_keypointsLeftCur)
+    # cv2.imshow('kptsRc', im_with_keypointsRightCur)
+    # #
+    both0 = kpts_descr_Left.copy() #l r
+    # both1 = np.hstack((kpts_descr_LeftCur,kpts_descr_RightCur))
+    #
+    # both2 = np.vstack((kpts_descr_Left,kpts_descr_LeftCur))
+    # both3 = np.vstack((kpts_descr_Right,kpts_descr_RightCur))
+
+    a = np.zeros(len(p))
+    # files = 'tan.dat'
+    # #
+    #f = open(files, 'a+b')
+    # print both0.shape
+    for i in range (0, len(p),5):
+        # cv2.line(both2,( int(p[i].vLp),int(p[i].uLp)),(int(p[i].vLc),int(p[i].uLc+196 )),(255,0,0),1)
+        # cv2.line(both3,( int(p[i].vRp),int(p[i].uRp)),(int(p[i].vRc),int(p[i].uRc+196 )),(255,0,0),1)
+
+        #cv2.line(both0,( int(p[i].vLp),int(p[i].uLp)),(int(p[i].vRp+imgLeft.shape[1]),int(p[i].uRp )),(255,0,0),1)
+        cv2.line(both0,( int(p[i].vLp),int(p[i].uLp)),(int(p[i].vRp),int(p[i].uRp )),(255,0,0),1)
+        if p[i].vLp-p[i].vRp != 0:
+          a[i] = float(float((p[i].uLp - p[i].uRp)) / float((p[i].vLp-p[i].vRp)))
+        else:
+          a[i] = np.nan;
+
+        # cv2.line(both1,( int(p[i].vLc),int(p[i].uLc)),(int(p[i].vRc+672),int(p[i].uRc )),(255,0,0),1)
+
+
+    #     a[i] = (p[i].uLp - p[i].uRp) / (p[i].vLp-p[i].vRp)
+    #     pickle.dump(a[i], f)
+    # f.close()
+    #  for i in range (0, len(p)):
+    #      if abs(p[i].vLp-p[i].vRp) >100:
+    #          pass
+    #      # cv2.line(both0,( p[i].vLp,p[i].uLp),(p[i].vRp,p[i].uRp+192 ),(255,0,0),1)
+    #      a[i] = float(float((p[i].uLp - p[i].uRp+196)) / float((p[i].vLp-p[i].vRp)))
+    #      # pickle.dump(a[i], f)
+    # f.close()
+    # f = open(files, 'rb')
+    # i = 0
+    # while True:
+    #      try:
+    #          a.append( pickle.load(f))
+    #      except (EOFError):
+    #          break
+    a = np.array(a)
+    a[a==-np.inf] = 50
+    a[np.isnan(a)] = 50
+    a[a==np.inf] = 50
+    # f.close()
+    print a
+    minimum = np.amin(a)
+    maximum = np.amax(a)
+    print 'min =', minimum, "max = ", maximum
+    plt.hist(a,bins = 200)
+    plt.title('plot_shelve_5cm')
+    plt.xlabel("value")
+    plt.ylabel('frequency')
+    fig = plt.gcf()
+    #
+    plot_url = py.plot_mpl(fig, filename ='plot_shelve_5cm')
+    #
+    #
+
+    # print len(a)
+    #py.sign_in('username', 'api_key')
+    # #
+    # # print a
+    # #     if p[i].c1 == 1:
+    # #         cv2.line(both1,(p[i].v2p, p[i].u2p),(p[i].v1p, p[i].u1p+196),(0,255,0),1)
+    # #     if p[i].c1 == 2:
+    # #         cv2.line(both2,(p[i].v2p, p[i].u2p),(p[i].v1p, p[i].u1p+196),(0,100,100),1)
+    # #     if p[i].c1 == 3:
+    # #         cv2.line(both3,(p[i].v2p, p[i].u2p),(p[i].v1p, p[i].u1p+196),(255,200,0),1)
+
+
+    plt.imshow(kpts_descr_Left, cmap = 'gray', interpolation = 'bicubic')
+
+    plt.xticks([]), plt.yticks([])  # to hide tick values on X and Y axis
+    plt.show()
+
+    plt.imshow(kpts_descr_Right,cmap = 'gray', interpolation = 'bicubic')
+    plt.xticks([]), plt.yticks([])  # to hide tick values on X and Y axis
+    plt.show()
+    # cv2.imshow("test1",both1)
+    # cv2.imshow("test2",both2)
+    # cv2.imshow("test3",both3)
+
+    cv2.namedWindow('test', cv2.WINDOW_NORMAL)
+    cv2.imshow('test',both0)
+    k  = cv2.waitKey(0) & 0xFF
+    if k == 27:         # wait for ESC key to exit
+        cv2.destroyAllWindows()
+    elif k == ord('s'): # wait for 's' key to save and exit
+        cv2.imwrite('lines5cm.png',both0)
+        cv2.destroyAllWindows()
+    cv2.namedWindow('features matched in Right',cv2.WINDOW_NORMAL)
+    cv2.imshow('features matched in Right', kpts_descr_Right)
+    k  = cv2.waitKey(0) & 0xFF
+    if k == 27:         # wait for ESC key to exit
+          cv2.destroyAllWindows()
+    elif k == ord('s'): # wait for 's' key to save and exit
+        cv2.imwrite('right5cm.png',kpts_descr_Right)
+        cv2.destroyAllWindows()
+    cv2.namedWindow('features matched in Left',cv2.WINDOW_NORMAL)
+    cv2.imshow('features matched in Left', kpts_descr_Left)
+    k  = cv2.waitKey(0) & 0xFF
+    if k == 27:         # wait for ESC key to exit
+        cv2.destroyAllWindows()
+    elif k == ord('s'): # wait for 's' key to save and exit
+        cv2.imwrite('left5cm.png',kpts_descr_Left)
+        cv2.destroyAllWindows()
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+
+
     cv2.destroyAllWindows()
-elif k == ord('s'): # wait for 's' key to save and exit
-    cv2.imwrite('lines5cm.png',both0)
-    cv2.destroyAllWindows()
-cv2.namedWindow('features matched in Right',cv2.WINDOW_NORMAL)
-cv2.imshow('features matched in Right', kpts_descr_Right)
-k  = cv2.waitKey(0) & 0xFF
-if k == 27:         # wait for ESC key to exit
-      cv2.destroyAllWindows()
-elif k == ord('s'): # wait for 's' key to save and exit
-    cv2.imwrite('right5cm.png',kpts_descr_Right)
-    cv2.destroyAllWindows()
-cv2.namedWindow('features matched in Left',cv2.WINDOW_NORMAL)
-cv2.imshow('features matched in Left', kpts_descr_Left)
-k  = cv2.waitKey(0) & 0xFF
-if k == 27:         # wait for ESC key to exit
-    cv2.destroyAllWindows()
-elif k == ord('s'): # wait for 's' key to save and exit
-    cv2.imwrite('left5cm.png',kpts_descr_Left)
-    cv2.destroyAllWindows()
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
 
-
-cv2.destroyAllWindows()
+tryAll()
